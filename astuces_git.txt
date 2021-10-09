@@ -1,2 +1,0 @@
-check état ssh:
-ssh -T git@gitlab.etu.umontpellier.fr
