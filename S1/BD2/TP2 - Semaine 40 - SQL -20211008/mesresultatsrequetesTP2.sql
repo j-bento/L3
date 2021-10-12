@@ -320,7 +320,7 @@ prompt --- Q16 : Quel est l’abonné ayant effectué le plus d’emprunts ?
 
 SELECT NUM_AB,NOM FROM EMPRUNT
 JOIN ABONNE USING(NUM_AB)
-GROUP BY NUM_AB,NOM HAVING COUNT(*) = MAX(SELECT COUNT(*) FROM EMPRUNT GROUP BY NUM_AB);
+GROUP BY NUM_AB,NOM HAVING COUNT(*) >= ALL(SELECT COUNT(*) FROM EMPRUNT GROUP BY NUM_AB);
 
 /*
 Résultat attendu :
@@ -331,8 +331,11 @@ Résultat attendu :
 */
 
 prompt --- Q17 : Donnez, pour chaque livre (numéro ISBN et titre) emprunté au moins deux fois, son nombre d’exemplaires en code prêt "EXCLU". 
-
-
+SELECT EXEMPLAIRE.ISBN, TITRE, COUNT(*) AS "Nombre exemplaires" FROM EXEMPLAIRE
+JOIN LIVRE USING(ISBN)
+JOIN EMPRUNT ON EXEMPLAIRE.NUMERO=EMPRUNT.NUM_EX
+WHERE CODE_PRET='EXCLU'
+GROUP BY EXEMPLAIRE.ISBN,TITRE HAVING COUNT(EMPRUNT.NUM_EX)>=2;
 
 
 /*
