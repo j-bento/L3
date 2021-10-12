@@ -333,9 +333,7 @@ Résultat attendu :
 prompt --- Q17 : Donnez, pour chaque livre (numéro ISBN et titre) emprunté au moins deux fois, son nombre d’exemplaires en code prêt "EXCLU". 
 
 
-/*
-VOTRE REPONSE ICI
-*/
+
 
 /*
 Résultat attendu :
