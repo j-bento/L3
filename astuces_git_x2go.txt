@@ -1,0 +1,27 @@
+check état ssh:
+
+ssh -T git@gitlab.etu.umontpellier.fr
+
+copier fichier à distance:
+
+Windows->Linux:
+scp ./<fichier> jeremie.bentolila01@etu.umontpellier.fr@x2go.umontpellier.fr:~/<fichier> 
+
+Linux->Windows:
+scp jeremie.bentolila01@etu.umontpellier.fr@x2go.umontpellier.fr:~/<fichier> ./<fichier> 
+
+se connecter à ma session de la fac à distance:
+ssh -A -Y jeremie.bentolila01@etu.umontpellier.fr@x2go.umontpellier.fr
+
+se connecter à sqlplus:
+sqlplus e20190004783/azertyu@oracle.etu.umontpellier.fr:1524/plicence
+
+lister tables:
+
+SELECT table_name FROM user_tables;
+
+modifier table:
+ALTER TABLE nom_table MODIFY nom_colonne type_val;
+
+sortir du mode SQL:
+exit
