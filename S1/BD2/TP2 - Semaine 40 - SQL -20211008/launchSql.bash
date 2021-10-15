@@ -1,1 +1,0 @@
-rlwrap sqlplus e20190004783/azertyu@oracle.etu.umontpellier.fr:1524/plicence

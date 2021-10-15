@@ -102,17 +102,17 @@ SELECT TITRE,CATEGORIE FROM LIVRE WHERE CATEGORIE NOT IN('MEDECINE','SCIENCES','
 
 /*
 Résultat attendu :
-TITRE						   CATEGORIE
+TITRE						                       CATEGORIE
 -------------------------------------------------- ----------
 GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE	   HISTOIRE
-LE MUR						   NOUVELLE
-POESIES COMPLETES				   POEME
-UNE ROSE POUR MORRISSON 			   ROMAN
-LA PERLE					   ROMAN
-LE GRAND VESTIAIRE				   ROMAN
-L ENFANT					   ROMAN
-LE MIRACLE DE LA ROSE				   ROMAN
-LE NOM DE LA ROSE				   ROMAN
+LE MUR						                       NOUVELLE
+POESIES COMPLETES				                   POEME
+UNE ROSE POUR MORRISSON 			               ROMAN
+LA PERLE					                       ROMAN
+LE GRAND VESTIAIRE				                   ROMAN
+L ENFANT					                       ROMAN
+LE MIRACLE DE LA ROSE				               ROMAN
+LE NOM DE LA ROSE				                   ROMAN
 
 9 lignes selectionnees.
 
@@ -161,11 +161,11 @@ WHERE TITRE='LE MUR';
 
 /*
 Résultat attendu :
-  NUMERO CODE_PRET		ETAT
+  NUMERO    CODE_PRET		    ETAT
 ---------- -------------------- ---------------
-      5003 EMPRUNTABLE		BON
-      4203 EMPRUNTABLE		BON
-      4204 EMPRUNTABLE		ABIME
+      5003 EMPRUNTABLE		    BON
+      4203 EMPRUNTABLE		    BON
+      4204 EMPRUNTABLE		    ABIME
 
 */
 
@@ -210,7 +210,7 @@ WHERE NOM='RENARD' AND PRENOM='ALBERT' AND D_RET_REEL IS NULL;
 Résultat attendu :
   COUNT(*)
 ----------
-	 2
+	    2
 
 */
 
@@ -302,14 +302,14 @@ GROUP BY ISBN,TITRE HAVING COUNT(*)>2;
 
 /*
 Résultat attendu :
-ISBN		     TITRE						 AVG(PRIX)
+ISBN		         TITRE						                        AVG(PRIX)
 -------------------- -------------------------------------------------- ----------
-0_18_47892_2	     UNE ROSE POUR MORRISSON					50
-9_782070_36	     LA PERLE						60.666667
-3_505_13700_5	     LE GRAND VESTIAIRE 					63
-1_104_1050_2	     LE MUR						36.3333333
-1_22_1721_3	     LE NOM DE LA ROSE					       34.5
-2_7296_0040	     GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE	       42
+0_18_47892_2	     UNE ROSE POUR MORRISSON					        50
+9_782070_36	         LA PERLE						                    60.666667
+3_505_13700_5	     LE GRAND VESTIAIRE 					            63
+1_104_1050_2	     LE MUR						                        36.3333333
+1_22_1721_3	         LE NOM DE LA ROSE					                34.5
+2_7296_0040	         GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE	    42
 
 6 rows selected.
 
@@ -340,9 +340,9 @@ GROUP BY LIVRE.ISBN,TITRE;
 
 /*
 Résultat attendu :
-ISBN		TITRE						   Nombre exemplaires
+ISBN		    TITRE						                       Nombre exemplaires
 --------------- -------------------------------------------------- ------------------
-2_7296_0040	GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE			    1
+2_7296_0040	    GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE      1
 
 */
 
@@ -350,11 +350,18 @@ prompt -- Q18 : Existe t'il des homonymes (NUM_AB, NOM) parmi les abonnés ? Att
 prompt -- 1 DUPOND
 prompt -- 2 DUPOND
 
+--version 1, plus opti
+SELECT A1.NUM_AB, A1.NOM
+FROM ABONNE A1
+WHERE EXISTS(SELECT * FROM ABONNE A2
+WHERE A1.NUM_AB <> A2.NUM_AB
+AND A1.NOM=A2.NOM);
 
-
+--version 2
 SELECT NUM_AB,NOM FROM ABONNE 
 WHERE NOM IN (SELECT NOM FROM ABONNE GROUP BY NOM HAVING COUNT(*)>1)
-GROUP BY NUM_AB,NOM ;
+GROUP BY NUM_AB,NOM;
+
 
 /*
 Résultat attendu :
@@ -369,66 +376,104 @@ Résultat attendu :
 
 prompt --- Q19 : Existe-t-il des catégories de livres empruntées par tous les abonnés ?
 
-/*
-VOTRE REPONSE ICI
-*/
+--version 1
+SELECT CATEGORIE FROM LIVRE
+JOIN EXEMPLAIRE USING(ISBN)
+JOIN EMPRUNT E ON EXEMPLAIRE.NUMERO=E.NUM_EX
+GROUP BY CATEGORIE
+HAVING COUNT(DISTINCT E.NUM_AB)=(SELECT COUNT(*) FROM ABONNE);
 
+--version 2, contraposée de la version 1
+SELECT CATEGORIE FROM LIVRE L
+WHERE NOT EXISTS
+    (SELECT * FROM ABONNE A
+    WHERE NOT EXISTS 
+        (SELECT * FROM LIVRE L2
+        JOIN EXEMPLAIRE USING(ISBN)
+        JOIN EMPRUNT ON NUM_EX=NUMERO
+        WHERE EMPRUNT.NUM_AB=A.NUM_AB
+        AND L2.CATEGORIE=L.CATEGORIE));
 
 /*
 Résultat attendu :
 CATEGORIE
 ----------------
 NOUVELLE
-
-
-
 */
 
 prompt -- Q20 : Quels sont les livres (numéro ISBN et titre) dont tous les exemplaires valent plus de 30 euros ?
 
+--version 1 
+SELECT L.ISBN,L.TITRE FROM EXEMPLAIRE E
+JOIN LIVRE L ON (L.ISBN=E.ISBN)
+WHERE PRIX>30
+GROUP BY L.ISBN,L.TITRE
+HAVING COUNT(L.ISBN)=(SELECT COUNT(*) FROM EXEMPLAIRE WHERE L.ISBN=EXEMPLAIRE.ISBN)
+ORDER BY L.ISBN;
 
-/*
-VOTRE REPONSE ICI
-*/
+--version 2 (NOT EXISTS)
+SELECT L.ISBN,TITRE FROM LIVRE L
+WHERE NOT EXISTS(
+    SELECT E.ISBN FROM EXEMPLAIRE E
+    WHERE E.ISBN=L.ISBN
+    AND PRIX<30)
+AND ISBN IN (SELECT DISTINCT ISBN FROM EXEMPLAIRE)
+ORDER BY L.ISBN;
 
 /*
 Résultat attendu :
-ISBN		TITRE
+ISBN		    TITRE
 --------------- --------------------------------------------------
 0_12_27550_2	NEW APPLICATIONS OF DATABASES
 0_15_270500_3	LE MIRACLE DE LA ROSE
 0_18_47892_2	UNE ROSE POUR MORRISSON
 0_201_14439_5	AN INTRODUCTION TO DATABASE SYSTEMS
-0_85_4107_3	L ENFANT
+0_85_4107_3	    L ENFANT
 1_104_1050_2	LE MUR
-2_7296_0040	GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE
+2_7296_0040	    GODEL ESCHER BACH : LES BRINS D UNE GUIRLANDE
 3_505_13700_5	LE GRAND VESTIAIRE
 
 8 lignes selectionnees.
-
-
-
 */
 
 
 prompt -- Q21 : Quels sont les livres (numéro ISBN et titre) dont tous les exemplaires valant plus de 30 euros ont été au moins trois fois empruntés ?
 
-/*
-VOTRE REPONSE ICI
-*/
+SELECT L.ISBN,L.TITRE FROM LIVRE L
+WHERE NOT EXISTS
+    (SELECT E.ISBN FROM EXEMPLAIRE E 
+    WHERE E.ISBN=L.ISBN
+    AND PRIX>30
+    AND NOT EXISTS
+        (SELECT NUM_EX FROM EMPRUNT
+        WHERE E.NUMERO=NUM_EX
+        GROUP BY NUM_EX
+        HAVING COUNT(*)>=3)
+    );
 
 /*
 Résultat attendu :
-ISBN		TITRE
+ISBN		    TITRE
 --------------- --------------------------------------------------
 0_112_3785_5	POESIES COMPLETES
-0_8_7707_2	BASES DE DONNEES RELATIONNELLES
+0_8_7707_2	    BASES DE DONNEES RELATIONNELLES
 0_26_28079_6	FUNDAMENTALS OF DATABASE SYSTEMS*/
 
 prompt --- Q22 : Quels sont les livres caractérisés par exactement les mêmes mots clefs que l'ouvrage de numéro ISBN 0-8-7707-2 ? ATTENTION : bien regarder le livre 0_26_28079_6 et ses mots clés.
-/*
-VOTRE REPONSE ICI
-*/
+
+SELECT DISTINCT L.ISBN FROM LIVRE L
+JOIN CARACTERISE C ON L.ISBN=C.ISBN
+WHERE NOT EXISTS(
+    SELECT MOT FROM CARACTERISE C1
+    WHERE ISBN='0_8_7707_2'
+    AND NOT EXISTS(
+        SELECT * FROM CARACTERISE C2
+        WHERE C1.MOT=C2.MOT
+        AND C2.ISBN=L.ISBN)
+    )
+GROUP BY L.ISBN HAVING COUNT(L.ISBN)=(SELECT COUNT(*) 
+                                      FROM CARACTERISE 
+                                      WHERE ISBN='0_8_7707_2');
 
 /*
 Résultat attendu :
@@ -437,15 +482,3 @@ ISBN
 0_201_14439_5
 0_8_7707_2
 */
-
-
-
-
-
-
-
-         
-
-
-
-
