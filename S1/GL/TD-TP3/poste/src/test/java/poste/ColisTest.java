@@ -14,7 +14,7 @@ public class ColisTest {
 				"7877", 1024, 0.02f, Recommandation.deux, "train electrique", 200);
 	}
 	@Test
-	public void testToStringLettre() {
+	public void testToStringColis() {
 		assertEquals(colis1.toString(),("Colis 7877/famille Kaya, igloo 10, terres ouest/2/0.02/200.0"));
 	}
 	@Test

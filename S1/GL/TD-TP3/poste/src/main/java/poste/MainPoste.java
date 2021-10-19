@@ -16,7 +16,8 @@ public class MainPoste
 				"5854", 18, 0.00018f, Recommandation.deux, true);
 		Colis colis1 = new Colis("Le pere Noel", 
 				"famille Kaya, igloo 10, terres ouest",
-				"7877", 1024, 0.02f, Recommandation.deux, "train electrique", 200);      
+				"7877", 1024, 0.02f, Recommandation.deux, "train electrique", 200);
+		
 		// test toString
 		if(colis1.toString().equals("Colis 7877/famille Kaya, igloo 10, terres ouest/2/0.02/200.0")){
 			System.out.println("toString Colis 1 OK");
