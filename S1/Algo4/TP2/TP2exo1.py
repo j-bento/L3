@@ -58,14 +58,44 @@ def sat_exhau(F,n):
             return None
     return A
 
-def elimination(F,n,B):
-    pass
+def elimination(F,n,b):#but: éliminer la var Xn
+    #formule résultat après l'élimination
+    Fres=[]
+    for C in F:
+        Cres=[]
+        sat=False
+        for litt in C:
+            if abs(litt)==n:
+                if litt*b>0:
+                    sat=True
+            else:
+                Cres.append(litt)
+        if not sat:
+            Fres.append(Cres)
+    return Fres       
+
+def sat_backtrack(F, n):
+    if len(F)==0:#cas où F est vide
+        return [1]*n
+    if [] in F:#cas où F contient une clause vide
+        return None
+    for b in range(-1,2,2):#on prend b=-1 puis b=1
+        Fres=elimination(F,n,b)
+        A=sat_backtrack(Fres,n-1)
+        if A is not None:
+            return A.append(b)
+    return None
+    
+
 # AA=[-1,-1,-1,-1]
 # for i in range(16):
 #     AA=aff_suivante(AA)
 #     print(AA)
 
-# test=[[1,2],[-1,2],[1,-2],[-1,-2]]
+test=[[1,2],[3,4],[5,6]]
+print(sat_exhau(test,6),sat_backtrack(test,6))
+
+
 # valTestA=[-1,1,1]
 # print(aff_suivante(valTestA))
 # print(clause("1 2 -3 0 \n"))
@@ -73,15 +103,15 @@ def elimination(F,n,B):
 # print(est_valide(FC[0],valTestA))
 
 #pour les insat
-FC=parseur("random-17-unsat.cnf")
-t0= time.time()
-print(sat_exhau(FC[0],FC[1]))
-t1 = time.time() - t0
-print("Temps: ", t1,"seconde(s)")
+# FC=parseur("random-17-unsat.cnf")
+# t0= time.time()
+# print(sat_exhau(FC[0],FC[1]))
+# t1 = time.time() - t0
+# print("Temps: ", t1,"seconde(s)")
 
 #pour les sat
-FC=parseur("random-25-sat.cnf")
-t0= time.time()
-print(sat_exhau(FC[0],FC[1]))
-t1 = time.time() - t0
-print("Temps: ", t1,"seconde(s)")
+# FC=parseur("random-25-sat.cnf")
+# t0= time.time()
+# print(sat_exhau(FC[0],FC[1]))
+# t1 = time.time() - t0
+# print("Temps: ", t1,"seconde(s)")
