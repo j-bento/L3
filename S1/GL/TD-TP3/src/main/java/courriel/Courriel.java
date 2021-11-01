@@ -27,6 +27,10 @@ public class Courriel {
 		return this.mailDestinataire;
 	}
 	
+	public ArrayList<String> getPieceJointe(){
+		return pieceJointe;
+	}
+	
 	public boolean titreValide() {
 		return titreMessage!="";
 	}

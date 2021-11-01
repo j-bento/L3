@@ -30,22 +30,26 @@ public class CourrielTest {
 	}
 	@Test	
 	public void adresseElectroniqueBienFormee() {
-		assert(courriel1.getMail().matches("^[[A-Z][a-z]]+[[A-Z][a-z][0-9].-]+@[a-z]+\\.[a-z]{2,6}$"));
+		assert(courriel1.adresseMailValide());
 	}
 	@Test	
 	public void adresseElectroniqueBienFormee2() {
-		assert(courriel3.getMail().matches("^[[A-Z][a-z]]+[[A-Z][a-z][0-9].-]+@[a-z]+\\.[a-z]{2,6}$"));
-	}
+		assert(courriel3.adresseMailValide());
+		}
 	@Test
 	public void titreNonNul() {
-	assert(courriel1.getTitre()!="");
+	assert(courriel1.titreValide());
 	}
 	@Test
 	public void titreNonNul2() {
-	assert(courriel3.getTitre()!="");
-	@Test
-	public void PieceJointeTest() {
-		assert(1==1);
+	assert(courriel3.titreValide());
 	}
-}
+	@Test
+	public void PieceJointeTest1() {
+		assert(courriel1.checkPieceJointe());
+	}
+	@Test
+	public void PieceJointeTest2() {
+		assert(courriel3.checkPieceJointe());
+	}
 }
