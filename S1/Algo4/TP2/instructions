@@ -1,0 +1,6 @@
+Q2
+git clone https://github.com/ical4j/ical4j.git
+
+
+Q4
+mvn verify
