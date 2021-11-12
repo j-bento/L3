@@ -1,27 +1,16 @@
 import time, re
 
 def clause(s):
-    #enlève les doubles espaces ou n-espaces et les réduit à 1
-    s=re.sub("  +", " ", s)
-    S=s.split(" ")
-    #si il y a un espace au début il sera enlevé
-    if "" in S:
-        S.remove("")
-    S=S[:-1]
-    S=[int(i) for i in S]
-    return S 
+    return [int(i) for i in s.split()][:-1]
 
 def parseur(nom):
     res=[0,0]
     l=[]
-    with open('cnf/'+nom,'r') as f:
+    with open('cnf/'+nom,"r") as f:
         for ligne in f:
-            if ligne[0]=="c":
-                pass
-            elif ligne[0]=="p":
-                res[1]=int(ligne.split(" ")[2])
-                #res[1]=int(res[1].replace("\n",""))
-            else:
+            if ligne[0]=="p":
+                res[1]=int(ligne.split(" ")[-2])
+            elif ligne[0]!="c":
                l.append(clause(ligne))
     res[0]=l
     return res
@@ -31,12 +20,9 @@ def est_valide(F,A):
         for litt in clause:
             # if ((litt>0) and (A[abs(litt)-1]>0)) or ((litt<0) and (A[abs(litt)-1]<0)):
             if litt*A[abs(litt)-1]>0: #plus simple...
-                #print("ok")
                 break
-            else:
-                #print("pas ok")
-                if litt==clause[len(clause)-1]:
-                    return False
+            elif litt==clause[len(clause)-1]:
+                return False
     return True
 
 def aff_suivante(A):
@@ -83,7 +69,8 @@ def sat_backtrack(F, n):
         Fres=elimination(F,n,b)
         A=sat_backtrack(Fres,n-1)
         if A is not None:
-            return A.append(b)
+            if A!=None:
+                return A.append(b)
     return None
     
 
@@ -92,9 +79,8 @@ def sat_backtrack(F, n):
 #     AA=aff_suivante(AA)
 #     print(AA)
 
-test=[[1,2],[3,4],[5,6]]
-print(sat_exhau(test,6),sat_backtrack(test,6))
-
+# test=[[1,2],[3,4],[5,6]]
+# print(sat_exhau(test,6),sat_backtrack(test,6))
 
 # valTestA=[-1,1,1]
 # print(aff_suivante(valTestA))
@@ -109,9 +95,9 @@ print(sat_exhau(test,6),sat_backtrack(test,6))
 # t1 = time.time() - t0
 # print("Temps: ", t1,"seconde(s)")
 
-#pour les sat
-# FC=parseur("random-25-sat.cnf")
-# t0= time.time()
-# print(sat_exhau(FC[0],FC[1]))
-# t1 = time.time() - t0
-# print("Temps: ", t1,"seconde(s)")
+# pour les sat
+FC=parseur("random-25-sat.cnf")
+t0= time.time()
+print(sat_backtrack(FC[0],FC[1]))
+t1 = time.time() - t0
+print("Temps: ", t1,"seconde(s)")
