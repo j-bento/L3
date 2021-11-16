@@ -6,4 +6,5 @@ public interface IGlobalBibliographyAccess {
 	public NoticeBibliographique getNoticeFromIsbn(String isbn) throws IncorrectIsbnException;
 	public ArrayList<NoticeBibliographique>noticesDuMemeAuteurQue(NoticeBibliographique ref);
 	public ArrayList<NoticeBibliographique> autresEditions(NoticeBibliographique ref);
+	//public int yolo(int nbr);
 }

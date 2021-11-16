@@ -20,4 +20,9 @@ public class GlobalBibliographyAccess implements IGlobalBibliographyAccess {
 		throw new UnsupportedOperationException();
 	}
 	
+	/*@Override
+	public int yolo(int nbr) {
+		throw new UnsupportedOperationException();
+	}*/
+	
 }

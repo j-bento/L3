@@ -12,7 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Mockito.*;
 
 public class BiblioTest {
 	
@@ -28,8 +30,11 @@ public class BiblioTest {
 	public NoticeBibliographique noticeG;
 	public NoticeBibliographique noticeH;
 	
+	@SuppressWarnings("deprecation")
 	@BeforeEach
 	public void init() {
+		MockitoAnnotations.openMocks(this);
+		
 		notices=new ArrayList<NoticeBibliographique>();
 		noticeA=new NoticeBibliographique("ISBN A","Titre A","Auteur A");
 		noticeB=new NoticeBibliographique("ISBN B","Titre B","Auteur A");
@@ -39,14 +44,16 @@ public class BiblioTest {
 		noticeF=new NoticeBibliographique("ISBN F","Titre F","Auteur A");
 		noticeG=new NoticeBibliographique("ISBN G","Titre G","Auteur G");
 		noticeH=new NoticeBibliographique("ISBN H","Titre H","Auteur H");
+		
 	}
-	@Mock
-	IGlobalBibliographyAccess GBA;
+	@Mock 
+	GlobalBibliographyAccess GBA;
 	
 	@InjectMocks
 	BiblioUtilities BU=new BiblioUtilities();
 	
-
+	//@InjectMocks
+	//GlobalBibliographyAccess GBA=new GlobalBibliographyAccess();
 	
 	@Test
 	public void chercherNoticesConnexesTest() {
@@ -55,20 +62,34 @@ public class BiblioTest {
 		notices.add(noticeD);
 		notices.add(noticeE);
 		notices.add(noticeF);
+		//when(GBA.yolo(12)).thenReturn(3);
+		//int test=GBA.yolo(12);
 		when(GBA.noticesDuMemeAuteurQue(noticeA)).thenReturn(notices);
-		//ArrayList<NoticeBibliographique> noticesRes=BU.chercherNoticesConnexes(noticeA);
+		
+		ArrayList<NoticeBibliographique> noticesRes=GBA.noticesDuMemeAuteurQue(noticeA);
+		//noticesRes.add(noticeA)
 		boolean b=true;int i=0;
-		/*
-		while (b || i<notices.size()) {
-			if (!notices.get(i).equals(noticesRes.get(i))) {
-				b=false;
+		
+		while (b && i<noticesRes.size()) {//on s'assure ici que toutes les notices ont le même auteur et des titres différents
+			if (noticeA.getAuteur()==noticesRes.get(i).getAuteur()) {//cas où l'auteur est le même
+				for (int j=0; j<noticesRes.size();j++) {
+					if (i!=j) {
+						if (noticesRes.get(i).getTitre()==noticesRes.get(j).getTitre()){
+							b=false;//cas où l'auteur est le même mais le titre est similaire à une autre notice
+						}
+					}
+				}
+			i++;
 			}
 			else {
-				i++;
-			}
-		}*/
-		assertTrue(b);
+				b=false;
+			}	
+		}
+		assertTrue(b);	//let's go
+	}
 	
-		
+	@Test
+	public void ajoutNoticeTest() {
+		//TODO test ajout notice
 	}
 }
