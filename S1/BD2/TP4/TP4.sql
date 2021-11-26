@@ -3,49 +3,85 @@
 */
 
 SET SERVEUROUTPUT ON;
-
-BEGIN
-EXECUTE IMMEDIATE 'DROP TABLE AB_NB';
-EXCEPTION
- WHEN OTHERS THEN
-	IF SQLCODE != -942 THEN
-	RAISE;
-	END IF;
-END;
-/
+DBMS_OUTPUT.enable;
+-- BEGIN
+-- EXECUTE IMMEDIATE 'DROP TABLE AB_NB';
+-- EXCEPTION
+--  WHEN OTHERS THEN
+-- 	IF SQLCODE != -942 THEN
+-- 	RAISE;
+-- 	END IF;
+-- END;
+-- /
 
 --num_abo:=&num_abo;
-CREATE TABLE AB_NB(
-    NUMERO NUMERIC(6,0) ,
-    NB NUMERIC(3,0),
-    CONSTRAINT PK_AB_NB PRIMARY KEY(NUMERO),
-    CONSTRAINT FK_NUM_AB FOREIGN KEY(NUMERO) REFERENCES ABONNE(NUM_AB)
-);
+--CONSTRAINT FK_NUM_AB FOREIGN KEY(NUMERO) REFERENCES ABONNE(NUM_AB)
+-- CREATE TABLE AB_NB(
+--     NUMERO NUMERIC(6,0) ,
+--     NB NUMERIC(3,0),
+--     CONSTRAINT PK_AB_NB PRIMARY KEY(NUMERO)
+-- );
+
+CREATE OR REPLACE FUNCTION nbprets(num_abo IN ABONNE.NUM_AB%TYPE)
+    RETURN INTEGER IS 
+        nbr INTEGER;
+    BEGIN
+        SELECT COUNT(*) INTO nbr FROM EMPRUNT
+        WHERE EMPRUNT.NUM_AB=num_abo;
+        RETURN(nbr);
+    END;
+    /
+
+--ETAPE 1
 DECLARE
     num_abo ABONNE.NUM_AB%TYPE;
-    nbr_abo AB_NB.NB%TYPE;
+    nbr AB_NB.NB%TYPE;
     num_abo2 ABONNE.NUM_AB%TYPE;
     AUCUN_EMPRUNT EXCEPTION;
 BEGIN
-    DBMS_OUTPUT.enable;
-    num_abo:=&num_abo;
-    SELECT NUM_AB INTO num_abo2 FROM ABONNE WHERE NUM_AB=num_abo;
     
-    SELECT COUNT(*) INTO nbr_abo FROM EMPRUNT 
-    WHERE EMPRUNT.NUM_AB=num_abo;
+    num_abo:=&num_abo;
+    SELECT COUNT(NUM_AB) INTO num_abo2 FROM ABONNE WHERE NUM_AB=num_abo;
+    DBMS_OUTPUT.PUT_LINE(num_abo2);
+    
 
-    IF nbr_abo=0 THEN RAISE AUCUN_EMPRUNT;
-    ELSE INSERT INTO AB_NB VALUES(num_abo,nbr_abo);
+    IF num_abo2=0 THEN RAISE NO_DATA_FOUND;
+    ELSIF nbprets(num_abo)=0 THEN RAISE AUCUN_EMPRUNT;
+    ELSE 
+    nbr:=nbprets(num_abo);
+    INSERT INTO AB_NB VALUES(num_abo,nbr);
     END IF;
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
         DBMS_OUTPUT.PUT_LINE('numero ' || num_abo || ' invalide');
-        INSERT INTO AB_NB VALUES(nbr_abo,NULL);
+        INSERT INTO AB_NB VALUES(num_abo,NULL);
 
         WHEN AUCUN_EMPRUNT THEN
         DBMS_OUTPUT.PUT_LINE('aucun emprunt pour ' || num_abo );
-        INSERT INTO AB_NB VALUES(nbr_abo,-1);
+        INSERT INTO AB_NB VALUES(num_abo,-1);
+END;
+/
+--ETAPE 2
+DECLARE
+    TEST INTEGER;
+BEGIN
+    
+    DBMS_OUTPUT.enable;
+    TEST:=nbprets(901001);
+    DBMS_OUTPUT.PUT_LINE(TEST);
+
 END;
 /
 
+SELECT NUM_AB,nbprets(NUM_AB) FROM DUAL,EMPRUNT
+    GROUP BY NUM_AB;
+
+--ETAPE 3
+--utiliser les curseurs
+DECLARE
+    CURSOR tuples IS
+    SELECT NUM_AB,CATEGORIE
+    FROM ABONNE,LIVRE;
+    
 SELECT * FROM AB_NB;
+DELETE FROM AB_NB;
