@@ -10,7 +10,7 @@ public class Colis extends ObjetPostal
 
 	private static float tarifBase=2;
 	private static String typeObjetPostal="Colis";
-	
+
 	public Colis()
 	{// implicitement : super();
 		declareContenu="vide"; valeurDeclaree=0;}

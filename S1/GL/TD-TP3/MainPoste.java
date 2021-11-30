@@ -1,5 +1,8 @@
 package poste;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+
 public class MainPoste
 {
 	private static float tolerancePrix=0.001f;
@@ -14,9 +17,17 @@ public class MainPoste
 		Lettre lettre2 = new Lettre("Le pere Noel",
 				"famille Kouk, igloo 2, banquise nord",
 				"5854", 18, 0.00018f, Recommandation.deux, true);
+		
+		Lettre lettre3 = new Lettre("Le pere Noel",
+				"famille Kouk, igloo 2, banquise nord",
+				"5854", 18, 0.00018f, Recommandation.zero, true);
 		Colis colis1 = new Colis("Le pere Noel", 
 				"famille Kaya, igloo 10, terres ouest",
 				"7877", 1024, 0.02f, Recommandation.deux, "train electrique", 200);
+		
+		Colis colis2 = new Colis("Le pere nono", 
+				"famille Kaya, igloo 10, terres est",
+				"7877", 1024, 0.01f, Recommandation.un, "train electrique", 100);
 		
 		// test toString
 		if(colis1.toString().equals("Colis 7877/famille Kaya, igloo 10, terres ouest/2/0.02/200.0")){
@@ -102,7 +113,28 @@ public class MainPoste
 			System.out.println("volume sac 2 NOK");
 		}
 
-
+		System.out.println(sac2.toString());
+		System.out.println("Sac \ncapacite: "+sac2.getCapacite()+
+		"\nvolume: "+sac2.getVolume()+"\n"+lettre1.toString()+lettre2.toString()+colis1.toString()+"\n");
+		System.out.println(colis2.tarifAffranchissement());
+		System.out.println(lettre3.tarifAffranchissement());
+		
+		// Create a stream to hold the output
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		PrintStream ps = new PrintStream(baos);
+		// IMPORTANT: Save the old System.out!
+		PrintStream old = System.out;
+		// Tell Java to use your special stream
+		System.setOut(ps);
+		// Print some output: goes to your special stream
+		lettre1.affiche();
+		// Put things back
+		System.out.flush();
+		System.setOut(old);
+		// Show what happened
+		System.out.print(baos.toString());
+		System.out.println(lettre1.toString());
+		System.out.println((lettre1.toString()+"\n").equals(baos.toString()));
 	}
 }
 

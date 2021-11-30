@@ -19,7 +19,12 @@ public class SacPostal
 	public double getCapacite()
 	{ return capacite;}
 
+
 	//accesseur de consultation pour contenu possible
+	
+	public ArrayList<ObjetPostal> getContenu() {
+		return contenu;
+	}
 
 	//autres methodes
 	public boolean ajoute(ObjetPostal o)
