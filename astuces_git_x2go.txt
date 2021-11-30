@@ -14,7 +14,7 @@ se connecter à ma session de la fac à distance:
 ssh -A -Y jeremie.bentolila01@etu.umontpellier.fr@x2go.umontpellier.fr
 
 se connecter à sqlplus:
-sqlplus e20190004783/azertyu@oracle.etu.umontpellier.fr:1524/plicence
+rlwrap sqlplus e20190004783/azertyu@oracle.etu.umontpellier.fr:1524/plicence
 
 lister tables:
 
@@ -25,3 +25,6 @@ ALTER TABLE nom_table MODIFY nom_colonne type_val;
 
 sortir du mode SQL:
 exit
+
+Graphe des branches Git:
+git log --oneline --graph --decorate --all
