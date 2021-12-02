@@ -60,7 +60,7 @@ def elimination(F,n,b):#but: éliminer la var Xn
             Fres.append(Cres)
     return Fres       
 
-def sat_backtrack(F, n):
+def sat_backtrack(F, n):#TODO débugger cette fonction
     if len(F)==0:#cas où F est vide
         return [1]*n
     if [] in F:#cas où F contient une clause vide
