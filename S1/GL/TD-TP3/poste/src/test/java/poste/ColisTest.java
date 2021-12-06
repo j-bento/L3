@@ -25,21 +25,19 @@ public class ColisTest {
 	@Test
 	public void testColisConstructeurDef() {
 		Colis colisDefaut=new Colis();
-		assert(colisDefaut.getOrigine()=="inconnue" &&
-				colisDefaut.getDestination()=="inconnue" &&
-				colisDefaut.getCodePostal()=="0000" &&
-				colisDefaut.getPoids()==0 &&
-				colisDefaut.getVolume()==0 &&
-				colisDefaut.getTauxRecommandation()==Recommandation.zero &&
+		assert(colisDefaut.getOrigine()=="inconnue");
+		assert(colisDefaut.getDestination()=="inconnue");
+		assert(colisDefaut.getCodePostal()=="0000");
+		assert(colisDefaut.getPoids()==0);
+		assert(colisDefaut.getVolume()==0);
+		assert(colisDefaut.getTauxRecommandation()==Recommandation.zero);
+		assert(colisDefaut.getDeclareContenu()=="vide");
+		assert(colisDefaut.getValeurDeclaree()==0);
 				
-				colisDefaut.getDeclareContenu()=="vide" &&
-				colisDefaut.getValeurDeclaree()==0
-				
-				);
 	}
 	@Test
 	public void testToStringColis() {
-		assertEquals(colis1.toString(),("Colis 7877/famille Kaya, igloo 10, terres ouest/2/0.02/200.0"));
+		assertEquals("Colis 7877/famille Kaya, igloo 10, terres ouest/2/0.02/200.0",colis1.toString());
 	}
 	@Test
 	public void testAffranchissement() {

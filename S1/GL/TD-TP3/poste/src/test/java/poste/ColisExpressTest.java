@@ -10,7 +10,7 @@ public class ColisExpressTest {
 
 	ColisExpress colisExpress1 ;
 	ColisExpress colisExpress2 ;
-	//ColisExpress colisExpress3 ;
+	
 	@BeforeEach
 	public void setUp() throws ColisExpressInvalide {
 		colisExpress1=new ColisExpress("Le pere Noel", 
@@ -22,19 +22,19 @@ public class ColisExpressTest {
 	}
 	@Test
 	public void poidsTest(){//doit génerer une exception
-		/*Throwable exception=*/assertThrows(ColisExpressInvalide.class, 
+		assertThrows(ColisExpressInvalide.class, 
 				()->{ 
 					new ColisExpress("Le pere Noel","famille Bidule, igloo 10, terres ouest","7877", 200, 0.02f, Recommandation.deux, "velo electrique", 200, false);
 				}); 
-		//assertEquals(exception.getClass(),ColisExpressInvalide.class);
+
 	}
 	@Test
 	public void poidsTest2(){//ne doit pas génerer d'exception
-		/*Throwable exception=*/assertDoesNotThrow( 
+		assertDoesNotThrow( 
 				()->{ 
 					new ColisExpress("Le pere Noel","famille Bidule, igloo 10, terres ouest","7877", 29, 0.02f, Recommandation.deux, "velo electrique", 200, false);
 				});      
-		//assertEquals(exception.getClass(),ColisExpressInvalide.class);
+
 	}
 	@Test
 	public void testToStringColisExpress() {

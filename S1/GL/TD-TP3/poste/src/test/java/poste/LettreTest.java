@@ -40,8 +40,8 @@ public class LettreTest {
 	}
 	@Test
 	public void testToStringLettre() {
-		assertEquals(lettre1.toString(),"Lettre 7877/famille Kirik, igloo 5, banquise nord/1/ordinaire");
-		assertEquals(lettre2.toString(),"Lettre 5854/famille Kouk, igloo 2, banquise nord/2/urgence");
+		assertEquals("Lettre 7877/famille Kirik, igloo 5, banquise nord/1/ordinaire",lettre1.toString());
+		assertEquals("Lettre 5854/famille Kouk, igloo 2, banquise nord/2/urgence",lettre2.toString());
 	}
 	@Test
 	public void testAffranchissement() {

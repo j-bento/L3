@@ -113,28 +113,7 @@ public class MainPoste
 			System.out.println("volume sac 2 NOK");
 		}
 
-		System.out.println(sac2.toString());
-		System.out.println("Sac \ncapacite: "+sac2.getCapacite()+
-		"\nvolume: "+sac2.getVolume()+"\n"+lettre1.toString()+lettre2.toString()+colis1.toString()+"\n");
-		System.out.println(colis2.tarifAffranchissement());
-		System.out.println(lettre3.tarifAffranchissement());
-		
-		// Create a stream to hold the output
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		PrintStream ps = new PrintStream(baos);
-		// IMPORTANT: Save the old System.out!
-		PrintStream old = System.out;
-		// Tell Java to use your special stream
-		System.setOut(ps);
-		// Print some output: goes to your special stream
-		lettre1.affiche();
-		// Put things back
-		System.out.flush();
-		System.setOut(old);
-		// Show what happened
-		System.out.print(baos.toString());
-		System.out.println(lettre1.toString());
-		System.out.println((lettre1.toString()+"\n").equals(baos.toString()));
+
 	}
 }
 
