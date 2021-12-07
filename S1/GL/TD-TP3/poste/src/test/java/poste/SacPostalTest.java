@@ -59,19 +59,22 @@ public class SacPostalTest {
 		assertFalse(sac3.ajoute(colis2));
 	}
 	
-	@AfterEach
-	public void volumeTest2() {		
-		sac2 = sac1.extraireV1("7877");
-		assert (sac2.getVolume()-0.02517999955569394f<toleranceVolume);
-	}
-	@AfterEach
+	@Test
 	public void extraireV2Test() {	
 		SacPostal sac3=new SacPostal();
 		sac3.ajoute(lettre1);
 		sac3.ajoute(lettre2);
 		sac3.ajoute(colis1);
-		
+		//colis1 et lettre1 ont le même code
 		sac3.extraireV2("7877");
+		assertEquals(1,sac3.getContenu().size());
 	}
+	
+	@AfterEach
+	public void volumeTest2() {		
+		sac2 = sac1.extraireV1("7877");
+		assert (sac2.getVolume()-0.02517999955569394f<toleranceVolume);
+	}
+	
 	
 }

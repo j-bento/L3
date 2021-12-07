@@ -25,14 +25,14 @@ public class ColisTest {
 	@Test
 	public void testColisConstructeurDef() {
 		Colis colisDefaut=new Colis();
-		assert(colisDefaut.getOrigine()=="inconnue");
-		assert(colisDefaut.getDestination()=="inconnue");
-		assert(colisDefaut.getCodePostal()=="0000");
-		assert(colisDefaut.getPoids()==0);
-		assert(colisDefaut.getVolume()==0);
-		assert(colisDefaut.getTauxRecommandation()==Recommandation.zero);
-		assert(colisDefaut.getDeclareContenu()=="vide");
-		assert(colisDefaut.getValeurDeclaree()==0);
+		assertEquals("inconnue",colisDefaut.getOrigine());
+		assertEquals("inconnue",colisDefaut.getDestination());
+		assertEquals("0000",colisDefaut.getCodePostal());
+		assertEquals(0,colisDefaut.getPoids());
+		assertEquals(0,colisDefaut.getVolume());
+		assertEquals(Recommandation.zero,colisDefaut.getTauxRecommandation());
+		assertEquals("vide",colisDefaut.getDeclareContenu());
+		assertEquals(0,colisDefaut.getValeurDeclaree());
 				
 	}
 	@Test

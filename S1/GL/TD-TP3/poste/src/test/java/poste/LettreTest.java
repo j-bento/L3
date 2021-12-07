@@ -30,13 +30,13 @@ public class LettreTest {
 	@Test
 	public void testLettreConstructeurDef() {
 		Lettre lettreDefaut=new Lettre();
-		assert(lettreDefaut.getOrigine()=="inconnue");
-		assert(lettreDefaut.getDestination()=="inconnue");
-		assert(lettreDefaut.getCodePostal()=="0000");
-		assert(lettreDefaut.getPoids()==0);
-		assert(lettreDefaut.getVolume()==0);
-		assert(lettreDefaut.getTauxRecommandation()==Recommandation.zero);
-		assert(lettreDefaut.isUrgence()==false);
+		assertEquals("inconnue",lettreDefaut.getOrigine());
+		assertEquals("inconnue",lettreDefaut.getDestination());
+		assertEquals("0000",lettreDefaut.getCodePostal());
+		assertEquals(0,lettreDefaut.getPoids());
+		assertEquals(0,lettreDefaut.getVolume());
+		assertEquals(Recommandation.zero,lettreDefaut.getTauxRecommandation());
+		assertFalse(lettreDefaut.isUrgence());
 	}
 	@Test
 	public void testToStringLettre() {
