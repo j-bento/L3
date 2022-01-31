@@ -7,15 +7,12 @@ assumption.
 Qed.
 
 (* n°2 *)
-(* Goal (A -> B -> C) -> (A -> B) -> C.
+Goal (A -> B -> C) -> (A -> B) -> A -> C.
 intros.
-cut A.
-intro.
-pose (H0 H1).
-pose (H H1 b).
-exact c.
+apply (H H1).
+apply (H0 H1).
 Qed.
- *)
+
 
 (* n°3 *)
 Goal A /\ B -> B.
