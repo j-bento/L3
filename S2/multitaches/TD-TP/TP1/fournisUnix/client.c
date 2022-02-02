@@ -65,12 +65,20 @@ int main(int argc, char *argv[]) {
 
   /* Etape 4 : envoyer un message au serveur  (voir sujet pour plus de détails)*/
   socklen_t lgA = sizeof(struct sockaddr_in) ;
+//   int *tab=(int*) malloc(5*sizeof(int));//tableau de 5 elts
+//     for (int i=1;i<(int) (sizeof(tab));i++)
+//     {
+//      tab[i-1]=i;
+//     }
   char msg[100];
   printf("Rentrez un message (100 caracteres max): ");
-  scanf("%100s",msg);
+//   scanf("%100s",msg); //nul, ne marche pas avec les espaces
+  fgets(msg,101,stdin);
+  msg[strcspn(msg,"\n")]=0; //pour enlever le \n qui se rajoute à la fin de msg
   printf("votre message: %s \n",msg);
 
-  res = sendto(ds, msg, strlen(msg)+1, 0, (struct sockaddr*)&sockServ, lgA) ;//sizeof(struct...) longueur adresse
+  res = sendto(ds, &msg, strlen(msg)+1, 0, (struct sockaddr*)&sockServ, lgA) ;//sizeof(struct...) longueur adresse
+//   res = sendto(ds, tab, strlen(msg)+1, 0, (struct sockaddr*)&sockServ, lgA) ;
   if (res==-1){
      perror("Client : pb envoi message \n");
      exit(1);
@@ -95,52 +103,3 @@ int main(int argc, char *argv[]) {
   printf("Client : je termine\n");
    return 0;
 }
-
-
-
-// int main(int argc, char **argv)
-// {
-//    int s;
-//    unsigned short port;
-//    struct sockaddr_in server;
-//    char buf[32];
-
-//    /* argv[1] is internet address of server argv[2] is port of server.
-//     * Convert the port from ascii to integer and then from host byte
-//     * order to network byte order.
-//     */
-//    if(argc != 3)
-//    {
-//       printf("Usage: %s <host address> <port> \n",argv[0]);
-//       exit(1);
-//    }
-//    port = htons(atoi(argv[2]));
-
-
-//    /* Create a datagram socket in the internet domain and use the
-//     * default protocol (UDP).
-//     */
-//    if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
-//    {
-//        perror("socket()");
-//        exit(1);
-//    }
-
-//    /* Set up the server name */
-//    server.sin_family      = AF_INET;            /* Internet Domain    */
-//    server.sin_port        = port;               /* Server Port        */
-//    server.sin_addr.s_addr = inet_addr(argv[1]); /* Server's Address   */
-
-//    strcpy(buf, "Hello");
-
-//    /* Send the message in buf to the server */
-//    if (sendto(s, buf, (strlen(buf)+1), 0,
-//                  (struct sockaddr *)&server, sizeof(server)) < 0)
-//    {
-//        perror("sendto()");
-//        exit(2);
-//    }
-//    printf("client : message sent\n");
-//    /* Deallocate the socket */
-//    close(s);
-// }

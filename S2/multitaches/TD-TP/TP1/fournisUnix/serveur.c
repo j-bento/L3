@@ -62,113 +62,42 @@ int main(int argc, char *argv[]) {
        exit(3);
    }
 
-   printf("Port assigned is %d\n", ntohs(adServeur.sin_port));
-   printf("Adresse assigned : %s\n",inet_ntoa(adServeur.sin_addr));
+   printf("Serveur : port assigné: %d\n", ntohs(adServeur.sin_port));
+   printf("Serveur : adresse assignée: %s\n",inet_ntoa(adServeur.sin_addr));
+
   /* Etape 4 : recevoir un message du client (voir sujet pour plus de détails)*/
+//   int msgClient[10];
   char msgClient[100];//message du client
   struct sockaddr_in adClient;
   socklen_t lgA = sizeof(struct sockaddr_in) ;
-  res=recvfrom(ds,&msgClient,sizeof(msgClient),0,(struct sockaddr*) &adClient, &lgA);
 
-  if (res==-1){
-     perror("Serveur : pb reception message ");
-     exit(1);
-  }
-  // printf("Serveur : message reçu du client: %s \n",msgClient);
-  printf("Received message: %s \nFrom domain %s port %d internet\
- address %s\n",
+  do{
+      res=recvfrom(ds,&msgClient,sizeof(msgClient),0,(struct sockaddr*) &adClient, &lgA);
+      if (res==-1){
+      perror("Client : pb reception message \n");
+      exit(1);
+      }
+      printf("Serveur : message recu : %s \nDu domaine %s, port %d, adresse IP : %s\n",
        msgClient,
        (adClient.sin_family == AF_INET?"AF_INET":"UNKNOWN"),
        ntohs(adClient.sin_port),
        inet_ntoa(adClient.sin_addr));
-  /* Etape 5 : envoyer un message au serveur (voir sujet pour plus de détails)*/
-  
+
+      /* Etape 5 : envoyer un message au serveur (voir sujet pour plus de détails)*/
+      int tailleMsg=strlen(msgClient);
+      if ((res=sendto(ds, &tailleMsg, sizeof(tailleMsg), 0, (struct sockaddr*)&adClient, lgA)) < 0){
+         perror("Serveur : pb envoi réponse au client \n");
+         exit(1);
+      }
+      printf("Serveur : réponse envoyée au client \n");
+  } while (strcmp(msgClient,"fin")!=0 && strcmp(msgClient,"end")!=0);
+
   /* Etape 6 : fermer la socket (lorsqu'elle n'est plus utilisée)*/
   if ((res=close(ds)) ==-1){
      perror("Serveur : pb fermeture socket \n");
      exit(1);
   }
   printf("Serveur : socket fermée\n");
-  
   printf("Serveur : je termine\n");
   return 0;
 }
-
-
-
-// int main(int argc,char **argv)
-// {
-//    int s;
-//    socklen_t client_address_size, namelen; 
-//    struct sockaddr_in client, server;
-//    char buf[32];
-
-//    /*
-//     * Create a datagram socket in the internet domain and use the
-//     * default protocol (UDP).
-//     */
-//    if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
-//    {
-//        perror("socket()");
-//        exit(1);
-//    }
-
-//    /*
-//     * Bind my name to this socket so that clients on the network can
-//     * send me messages. (This allows the operating system to demultiplex
-//     * messages and get them to the correct server)
-//     *
-//     * Set up the server name. The internet address is specified as the
-//     * wildcard INADDR_ANY so that the server can get messages from any
-//     * of the physical internet connections on this host. (Otherwise we
-//     * would limit the server to messages from only one network
-//     * interface.)
-//     */
-//    server.sin_family      = AF_INET;   /* Server is in Internet Domain */
-//    server.sin_port        = 0;         /* Use any available port      */
-//    server.sin_addr.s_addr = INADDR_ANY; // inet_addr("193.51.157.40");  /* Server's Internet Address   */
-
-//    if (bind(s, (struct sockaddr *)&server, sizeof(server)) < 0)
-//    {
-//        perror("bind()");
-//        exit(2);
-//    }
-
-//    /* Find out what port was really assigned and print it */
-//    namelen = sizeof(server);
-//    if (getsockname(s, (struct sockaddr *) &server, &namelen) < 0)
-//    {
-//        perror("getsockname()");
-//        exit(3);
-//    }
-
-//    printf("Port assigned is %d\n", ntohs(server.sin_port));
-
-//    /*
-//     * Receive a message on socket s in buf  of maximum size 32
-//     * from a client. Because the last two paramters
-//     * are not null, the name of the client will be placed into the
-//     * client data structure and the size of the client address will
-//     * be placed into client_address_size.
-//     */
-//    client_address_size = sizeof(client);
-
-//    if(recvfrom(s, buf, sizeof(buf), 0, (struct sockaddr *) &client,
-//             &client_address_size) <0)
-//    {
-//        perror("recvfrom()");
-//        exit(4);
-//    }
-
-//  printf("Received message %s from domain %s port %d internet
-//  address %s\n",
-//        buf,
-//        (client.sin_family == AF_INET?"AF_INET":"UNKNOWN"),
-//        ntohs(client.sin_port),
-//        inet_ntoa(client.sin_addr));
-
-//    /*
-//     * Deallocate the socket.
-//     */
-//    close(s);
-// }
