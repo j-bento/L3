@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
      toutes les fonctions et agir en fonction des valeurs
      possibles. Voici un exemple */
   if (ds == -1){
-    perror("Client : pb creation socket :");
+    perror("Client : pb creation socket \n");
     exit(1); // je choisis ici d'arrêter le programme car le reste
 	     // dépendent de la réussite de la création de la socket.
   }
@@ -52,7 +52,7 @@ int main(int argc, char *argv[]) {
   int res=bind(ds,(struct sockaddr*) &ad,sizeof(ad));
   
   if (res==-1){
-     perror("Client : pb nommage socket :");
+     perror("Client : pb nommage socket \n");
      exit(1);
   }
   printf("Client : nommage de la socket réussie \n");
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 
   res = sendto(ds, msg, strlen(msg)+1, 0, (struct sockaddr*)&sockServ, lgA) ;//sizeof(struct...) longueur adresse
   if (res==-1){
-     perror("Client : pb envoi message :");
+     perror("Client : pb envoi message \n");
      exit(1);
   }
   printf("Client : envoi message réussi\n");
@@ -80,18 +80,67 @@ int main(int argc, char *argv[]) {
   int msgServ;//message du serveur
   res=recvfrom(ds,&msgServ,sizeof(msgServ),0,(struct sockaddr*)&sockServ, &lgA);
   if (res==-1){
-     perror("Client : pb reception message :");
+     perror("Client : pb reception message \n");
      exit(1);
   }
   printf("Client : message reçu du serveur: %i \n",msgServ);
   /* Etape 6 : fermer la socket (lorsqu'elle n'est plus utilisée)*/
   res=close(ds);
   if (res==-1){
-     perror("Client : pb fermeture socket :");
+     perror("Client : pb fermeture socket \n");
      exit(1);
   }
-  printf("Client : socket fermee\n");
+  printf("Client : socket fermée\n");
 
   printf("Client : je termine\n");
    return 0;
 }
+
+
+
+// int main(int argc, char **argv)
+// {
+//    int s;
+//    unsigned short port;
+//    struct sockaddr_in server;
+//    char buf[32];
+
+//    /* argv[1] is internet address of server argv[2] is port of server.
+//     * Convert the port from ascii to integer and then from host byte
+//     * order to network byte order.
+//     */
+//    if(argc != 3)
+//    {
+//       printf("Usage: %s <host address> <port> \n",argv[0]);
+//       exit(1);
+//    }
+//    port = htons(atoi(argv[2]));
+
+
+//    /* Create a datagram socket in the internet domain and use the
+//     * default protocol (UDP).
+//     */
+//    if ((s = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+//    {
+//        perror("socket()");
+//        exit(1);
+//    }
+
+//    /* Set up the server name */
+//    server.sin_family      = AF_INET;            /* Internet Domain    */
+//    server.sin_port        = port;               /* Server Port        */
+//    server.sin_addr.s_addr = inet_addr(argv[1]); /* Server's Address   */
+
+//    strcpy(buf, "Hello");
+
+//    /* Send the message in buf to the server */
+//    if (sendto(s, buf, (strlen(buf)+1), 0,
+//                  (struct sockaddr *)&server, sizeof(server)) < 0)
+//    {
+//        perror("sendto()");
+//        exit(2);
+//    }
+//    printf("client : message sent\n");
+//    /* Deallocate the socket */
+//    close(s);
+// }
