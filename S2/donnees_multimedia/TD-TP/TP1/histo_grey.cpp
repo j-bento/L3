@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "image_ppm.h"
 
 int main(int argc, char* argv[])
@@ -16,7 +17,7 @@ int main(int argc, char* argv[])
     
     sscanf (argv[1],"%s",cNomImgLue);
 
-   OCTET *ImgIn, *ImgOut;
+   OCTET *ImgIn;//, *ImgOut;
    
    lire_nb_lignes_colonnes_image_pgm(cNomImgLue, &nH, &nW);
    nTaille = nH * nW;
@@ -24,6 +25,12 @@ int main(int argc, char* argv[])
    allocation_tableau(ImgIn, OCTET, nTaille);
    lire_image_pgm(cNomImgLue, ImgIn, nTaille);
    
+  int * tabVals = (int *) calloc( nH, sizeof(int) );//initialise tableau de nH entiers à 0 pour chaque elt 
+
+  for (int i=0;i<nTaille;i++){
+    tabVals[ImgIn[i]]++; //compte du nombre de pixels par niveau de gris
+  }
+
    FILE *fich;
    if( (fich = fopen(nomFich, "wb")) == NULL)
       {
@@ -32,15 +39,16 @@ int main(int argc, char* argv[])
       }
     else
     {
-	//  fprintf(fich,"# %s\r", nomFich) ;                         /*ecriture entete*/
-	//  fprintf(fich,"# indice  niveau de gris\r") ;
+	 fprintf(fich,"# %s\r", nomFich) ;                         /*ecriture entete*/
+	 fprintf(fich,"# indice  niveau de gris\r") ;
 
-    for (int i=0; i < nTaille; i++)
+    for (int i=0; i < nH; i++)
     { 
-        fprintf(fich,"%i %i\r",i,ImgIn[i]); //indice, niveau de gris du pixel pour chaque pixel
+        fprintf(fich,"%i %i\r",i,tabVals[i]); //intensité, nombre de pixels ayant cette intensité
     }
     fclose(fich);
-
+    free(tabVals);
+    // plot "histo.dat" with lines
     return 1;
     }
 }
