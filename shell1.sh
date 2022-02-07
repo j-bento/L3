@@ -13,7 +13,10 @@ alias s2='cd ~/FAC/L3/S1'
 date
 function mvtel()
 {
-	mv ~/Téléchargements/$1 .
+	if [ -z ${1+x} ]
+	then echo "Usage: mvtel <nom_fichier>" # $1 non défini
+	else mv ~/Téléchargements/$1 .
+	fi
 }
 function lst()
 {
