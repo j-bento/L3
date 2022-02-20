@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
   }
 
   /* Etape 1 : créer une socket */   
-  int ds = socket(PF_INET, SOCK_DGRAM, 0);
+  int ds = socket(PF_INET, SOCK_DGRAM, 0);//SOCK_STREAM pour le tcp, SOCK_DGRAM pour l'udp
 
   /* /!\ : Il est indispensable de tester les valeurs de retour de
      toutes les fonctions et agir en fonction des valeurs

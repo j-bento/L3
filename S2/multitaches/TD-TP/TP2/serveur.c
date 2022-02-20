@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
   }
   printf("Serveur : nommage de la socket réussie \n");
   /* Etape 3 : passer la socket en mode écoute */
-  if((res=listen(ds,10)) < 0){
+  if((res=listen(ds,3)) < 0){
      perror("Serveur : pb passage mode ecoute");
      exit(1);
   }
@@ -64,19 +64,24 @@ int main(int argc, char *argv[]) {
   /* Etape 4 : accepter une connexion */
   struct sockaddr_in adClient;
   socklen_t lgA=sizeof(struct sockaddr_in);
+//   char osef[10];
+//   printf("Rentre n'importe quoi pour passer le serveur en mode acceptation\n");
+//   fgets(osef,11,stdin);
+  char msgClient[100];//message du client
 
-  if((dsClient=accept(ds,(struct sockaddr *) &adClient,&lgA)) < 0){
+for (int i=0; i<3;i++){
+  if((dsClient=accept(ds,(struct sockaddr *) &adClient,&lgA)) < 0)
+   {
      perror("Serveur : pb acceptation demande connexion client");
      exit(1);
-  }
-  printf("Serveur : demande connexion client acceptée\n");
+   }
+   printf("Serveur : demande connexion client acceptée\n");
   /* Etape 5 : recevoir un message du client (voir sujet pour plus de détails)*/
-  char msgClient[100];//message du client
-  res=recv(ds,&msgClient,sizeof(msgClient),0);
-      if (res==-1){
-      perror("Serveur : pb reception message \n");
+      if ((res=recv(dsClient,&msgClient,sizeof(msgClient),0)) < 0){
+      perror("Serveur : pb reception message");
       exit(1);
       }
+      // strcat(msgClient,"\0");
       printf("Serveur : message recu : %s \nDu domaine %s, port %d, adresse IP : %s\n",
        msgClient,
        (adClient.sin_family == AF_INET?"AF_INET":"UNKNOWN"),
@@ -85,14 +90,24 @@ int main(int argc, char *argv[]) {
 
       /* Etape 6 : renvoyer un message au client (voir sujet pour plus de détails)*/
       int tailleMsg=strlen(msgClient);
-      if ((res=send(ds, &tailleMsg, sizeof(tailleMsg), 0)) < 0){
-         perror("Serveur : pb envoi réponse au client \n");
+      if ((res=send(dsClient, &tailleMsg, sizeof(tailleMsg), 0)) < 0){
+         perror("Serveur : pb envoi réponse au client");
          exit(1);
       }
       printf("Serveur : réponse envoyée au client \n");
+}
+
   
   /* Etape 7 : fermer la socket (lorsqu'elle n'est plus utilisée)*/
-  
+  if ((res=close(ds)) < 0){
+     perror("Serveur : pb fermeture socket");
+     exit(1);
+  }
+  if ((res=close(dsClient)) < 0){
+     perror("Serveur : pb fermeture socket client");
+     exit(1);
+  }
+  printf("Serveur : sockets fermées\n");
   
   printf("Serveur : je termine\n");
   return 0;
