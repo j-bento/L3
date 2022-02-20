@@ -2,3 +2,7 @@ tp7*
 *.o
 bin/
 obj/
+emission/
+reception/
+*.crashcoqide
+DEADJOE
