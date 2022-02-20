@@ -1,0 +1,24 @@
+%{/* delblancs.l+ */
+
+/* ZONE DE DEFINITION (OPTIONNELLE) */
+// #include <iostream>
+/* ZONE DES REGLES apres le double pourcent (OBLIGATOIRE) */
+%}
+%option noyywrap
+%%
+^[\t ]*\n   {/*lignes blanches*/}
+^[\t ]+     {/*debuts blancs*/}
+[\t ]+$     {/*fins blanches*/}
+[\t ]+      {int c;
+             if ((c=input())!=EOF && c!=0){
+                 unput(c);
+                 putchar(' ');
+                }
+            }
+%%
+/* ZONE DES FONCTIONS C */
+int main(){
+    while (yylex()!=0){}
+    return 0;
+}   
+//exécution : ./delblancs < "fichier_entree" > "fichier_sortie"
