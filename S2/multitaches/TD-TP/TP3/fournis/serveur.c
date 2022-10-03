@@ -65,13 +65,18 @@ int main(int argc, char *argv[])
 
   int totalRecv = 0; // un compteur du nombre total d'octets recus d'un client
   char nom_fich[100];
-  if ((res=recv(dsClient,nom_fich,sizeof(nom_fich),0)) < 0){ //reception nom fichier
+  if ((res=recv(dsClient,&taille_nom_fich,sizeof(int),0)) < 0){ //reception taille nom fichier
+      perror("Serveur : pb reception taille nom fich");
+      exit(1);
+      }
+  printf("Serveur : taille nom fichier recue\n");
+  if ((res=recv(dsClient,nom_fich,sizeof(nom_fich),0)) < 0){ //reception taille nom fichier
       perror("Serveur : pb reception nom fich");
       exit(1);
       }
-  taille_nom_fich=(int) strlen(nom_fich);
-  printf("Serveur : nom fichier recu\n\
-  Taille nom fichier: %i, Nom: %s\n",taille_nom_fich,nom_fich);
+  printf("Serveur : taille nom fichier recue\n");
+  // taille_nom_fich=(int) strlen(nom_fich);
+  printf("Taille nom fichier: %i, Nom: %s\n",taille_nom_fich,nom_fich);
   
   char* filepath = (char*) malloc(sizeof(char)*(taille_nom_fich+16));
   strcpy(filepath,"./reception/"); // cette ligne n'est bien-sur qu'un exemple et doit être modifiée : le nom du fichier doit être reçu.
@@ -87,17 +92,20 @@ int main(int argc, char *argv[])
   // On ouvre le fichier dans lequel on va écrire
   FILE* file = fopen(filepath, "wb");
   if(file == NULL){
-    perror("Serveur : erreur ouverture fichier: \n");
+    perror("Serveur : erreur ouverture fichier ");
     exit(1);  
   }
 
   char buffer[MAX_BUFFER_SIZE];// ="ceci est un exemple de contenu a ecrire dans un fichier\n";
+  size_t written=0;
   while(totalRecv<taille_fich){
-    if ( (recv(dsClient,buffer,sizeof(buffer),0)) < 0){
-      
+    if ( (res=recv(dsClient,buffer,sizeof(buffer),0)) < 0){
+        perror("Serveur : Problème réception buffer ");
+        exit(1);
     }
-    size_t written = fwrite(buffer, sizeof(char), strlen(buffer)+1, file);
-    if(written < strlen(buffer)+1){  // cette ligne est valide uniquement pour ce simple exemple
+    written = fwrite(buffer, sizeof(char), strlen(buffer), file);
+    totalRecv += res;
+    if(written < strlen(buffer)){  // cette ligne est valide uniquement pour ce simple exemple
       perror("Serveur : Erreur a l'ecriture du fichier \n");
       fclose(file); 
     }

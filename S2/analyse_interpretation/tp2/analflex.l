@@ -36,7 +36,7 @@ main(){
                 printf(yylval.ID);
                 break;
             case 301:
-                printf();
+                printf("Jeton : 301 de valeur %s\n",lexeme);
                 break;
             case 302:
                 printf();

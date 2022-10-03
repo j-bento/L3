@@ -354,8 +354,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 2
-#define YY_END_OF_BUFFER 3
+#define YY_NUM_RULES 4
+#define YY_END_OF_BUFFER 5
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -365,7 +365,7 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[8] =
     {   0,
-        0,    0,    3,    2,    1,    1,    0
+        0,    0,    5,    3,    1,    2,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -373,8 +373,8 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    3,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    3,    1,    1,    3,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -405,24 +405,24 @@ static const YY_CHAR yy_meta[4] =
         1,    1,    1
     } ;
 
-static const flex_int16_t yy_base[10] =
+static const flex_int16_t yy_base[8] =
     {   0,
-        2,    1,    3,    6,    0,    0,    6,    1,    0
+        0,    0,    4,    5,    5,    5,    5
     } ;
 
-static const flex_int16_t yy_def[10] =
+static const flex_int16_t yy_def[8] =
     {   0,
-        8,    8,    7,    7,    9,    9,    0,    7,    7
+        7,    1,    7,    7,    7,    7,    0
     } ;
 
-static const flex_int16_t yy_nxt[10] =
+static const flex_int16_t yy_nxt[9] =
     {   0,
-        6,    4,    7,    5,    5,    3,    7,    7,    7
+        4,    5,    6,    7,    3,    7,    7,    7
     } ;
 
-static const flex_int16_t yy_chk[10] =
+static const flex_int16_t yy_chk[9] =
     {   0,
-        9,    8,    3,    2,    1,    7,    7,    7,    7
+        1,    1,    1,    3,    7,    7,    7,    7
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -439,11 +439,11 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "mdconverter.l"
-#line 2 "mdconverter.l"
+#line 1 "wc.l"
+#line 2 "wc.l"
 
 /* ZONE DE DEFINITION (OPTIONNELLE) */
-int c;
+int wc,ret_ligne,espace;
 /* ZONE DES REGLES apres le double pourcent (OBLIGATOIRE) */
 #line 449 "lex.yy.c"
 #line 450 "lex.yy.c"
@@ -663,7 +663,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "mdconverter.l"
+#line 8 "wc.l"
 
 #line 669 "lex.yy.c"
 
@@ -698,7 +698,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 6 );
+		while ( yy_base[yy_current_state] != 5 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -725,26 +725,25 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 9 "mdconverter.l"
-{if ((c=input())!=EOF && c!=0)
-        {
-            unput(c);
-            printf("ok");
-            putchar('<'); putchar('u'); putchar('l'); putchar('>');
-            putchar('<'); putchar('l'); putchar('i'); putchar('>');
-
-            // puts("<ul><li>");
-            // putchar(c);
-            
-        }
-    }
+#line 9 "wc.l"
+{ret_ligne++;}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 21 "mdconverter.l"
+#line 10 "wc.l"
+{espace++;}
+	YY_BREAK
+case 3:
+YY_RULE_SETUP
+#line 11 "wc.l"
+{wc++;}
+	YY_BREAK
+case 4:
+YY_RULE_SETUP
+#line 12 "wc.l"
 ECHO;
 	YY_BREAK
-#line 748 "lex.yy.c"
+#line 747 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1749,11 +1748,17 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 21 "mdconverter.l"
+#line 12 "wc.l"
 
 /* ZONE DES FONCTIONS C */
 int main(){
+    wc=0;
+    ret_ligne=0;
+    espace=0;
     while (yylex()!=0){}
+    wc=( wc + ret_ligne + espace);
+    espace+=ret_ligne;
+    printf("wc: %d %d %d\n",ret_ligne,espace,wc);
     return 0;
 }   
-//exécution : ./delblancs < "fichier_entree" > "fichier_sortie"
+// exécution : ./wc < "fichier_entree"

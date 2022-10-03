@@ -1,13 +1,20 @@
 # !/bin/bash 
 alias c='clear'
+alias m='make'
 alias rm='rm -i'
 alias hier='find ~ -mtime -1'
 alias lst='ls ~/Téléchargements'
 alias cdl='cd ~/FAC/L3'
+alias cdm='cd ~/FAC/M1'
 alias b='. ~/.bashrc'
 alias s1='cd ~/FAC/L3/S1'
 alias s2='cd ~/FAC/L3/S2'
 alias func='cat ~/FAC/L3/shell1.sh | grep -v alias | grep function' # affiche les fonctions
+alias code='~/Téléchargements/code_1.65.2-1646927742_amd64/usr/share/code/bin/code'
+alias antlr4='java -jar /home/e20190004783/antlr/antlr-4.11.1-complete.jar'
+alias grun='java org.antlr.v4.gui.TestRig'
+alias codium='codium -n .'
+export CLASSPATH=".:/home/e20190004783/antlr/antlr-4.11.1-complete.jar:$CLASSPATH"
 
 date
 function mvtel()

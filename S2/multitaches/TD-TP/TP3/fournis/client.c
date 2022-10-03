@@ -21,6 +21,8 @@ int main(int argc, char *argv[]) {
   int taille_fich=strlen(argv[3]);
   char *nom_fich=(char*) malloc(sizeof(char)*taille_fich);
   strcpy(nom_fich,argv[3]);
+  int taille_nom_fich=strlen(nom_fich);
+
   /* etape 1 : créer une socket */   
   int ds = socket(PF_INET, SOCK_STREAM, 0);//SOCK_STREAM pour le tcp, SOCK_DGRAM pour l'udp
   if (ds == -1){
@@ -45,11 +47,17 @@ int main(int argc, char *argv[]) {
 
   int totalSent = 0; // variable pour compter le nombre total d'octet effectivement envoyés au serveur du début à la fin des échanges.
 
-  if((res = send(ds, nom_fich, strlen(nom_fich)+1, 0)) < 0){
-         perror("Client : pb envoi fich");
+  if((res = send(ds, &taille_nom_fich, sizeof(int), 0)) < 0){
+         perror("Client : pb envoi taille du nom du fich");
       }
   
-  printf("Client : taille et nom fich envoyés au serveur\n"); 
+  printf("Client : taille du nom du fich envoyé au serveur\n"); 
+
+  if((res = send(ds, nom_fich, taille_nom_fich, 0)) < 0){
+         perror("Client : pb envoi nom fich");
+      }
+  
+  printf("Client : nom fich envoyé au serveur\n"); 
 
   int sendTCP(int sock, void *msg, int sizeMsg){ //void*: pointeur sur une case mémoire de tout type
       int res,reste_octets,octets_envoyes;
@@ -63,7 +71,7 @@ int main(int argc, char *argv[]) {
          reste_octets-=res;
          octets_envoyes+=res;
       }
-      return 1;
+      return octets_envoyes;
   }
  
   /* le bout de code suivant est une lecture de contenu d'un fichier dont le nom est passé en paramètre.
@@ -85,7 +93,7 @@ int main(int argc, char *argv[]) {
   // obtenir la taille du fichier
   struct stat attributes;
   if(stat(filepath, &attributes) == -1){
-    perror("Client : erreur stat");
+    perror("Client : erreur stat ");
     free(filepath);
     exit(1);
   }
@@ -93,6 +101,12 @@ int main(int argc, char *argv[]) {
   int file_size = attributes.st_size; // cette copie est uniquement informer d'où obtenir la taille du fichier.
   
   printf("Client : taille du fichier : %d octets\n", file_size);
+  if((res=send(ds,&file_size,sizeof(int),0)) < 0){
+    perror("Client : pb envoi taille fichier ");
+    free(filepath);
+    exit(1);
+  }
+  printf("Client : taille fichier envoyée\n");
   
   // lecture du contenu d'un fichier
   FILE* file = fopen(filepath, "rb");
@@ -110,9 +124,9 @@ int main(int argc, char *argv[]) {
     size_t read = fread(buffer, sizeof(char), MAX_BUFFER_SIZE, file);
     if(read == 0){
       if(ferror(file) != 0){
-	perror("Client : erreur lors de la lecture du fichier \n");
-	fclose(file);
-	exit(1);
+        perror("Client : erreur lors de la lecture du fichier \n");
+        fclose(file);
+        exit(1);
       }else{
         printf("Client : arrivé a la fin du la lecture du fichier\n");// fin du fichier
 	break;
@@ -126,9 +140,9 @@ int main(int argc, char *argv[]) {
     }
     else{
       printf("Client : Bloc envoyé\n");
-      totalSent+=(int) strlen(buffer);
+      totalSent += 
+      total_lu += read;
     }
-    total_lu += read;
   }
 
   // fermeture du fichier

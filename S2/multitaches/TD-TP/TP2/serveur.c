@@ -63,7 +63,13 @@ while (getpid()==pere && 1){  // on fork que si l'on est le père et on boucle s
   }
 
    if (getpid()!=pere){ // on traite le client avec le processus fils
-      printf("pid: %i\n",getpid());
+      // printf("pid: %i\n",getpid());
+      // fermeture socket serveur
+      if ((res=close(ds)) < 0){
+         perror("Serveur : pb fermeture socket");
+         exit(1);
+      }
+      printf("Serveur : socket serveur fermée pour le processus fils\n");
       // reception message client
       if ((res=recv(dsClient,&msgClient,sizeof(msgClient),0)) < 0){
       perror("Serveur : pb reception message");
@@ -87,6 +93,7 @@ while (getpid()==pere && 1){  // on fork que si l'on est le père et on boucle s
          perror("Serveur : pb fermeture socket client");
          exit(1);
       }
+
       printf("Serveur : socket client fermée\n");
    }
    

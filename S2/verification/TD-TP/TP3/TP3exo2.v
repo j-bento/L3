@@ -28,15 +28,18 @@ rewrite H.
 reflexivity.
 Qed.
 
-(* Lemma exo2_3: forall (l : list E), (rev (rev l)) = l.
+Lemma exo2_3: forall (l : list E), (rev (rev l)) = l.
 Proof.
 intros.
 elim l.
   simpl.
   reflexivity.
 intros.
-simpl. *)
-
+simpl.
+rewrite exo2_2.
+rewrite H.
+reflexivity.
+Qed.
 
 
 

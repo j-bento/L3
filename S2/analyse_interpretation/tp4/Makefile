@@ -12,7 +12,7 @@ YACCFLAGS=-ydtv
 #-y a la yacc : y.tab.c; -d genere y.tab.h; -t debogage possible; -v verbose
 
 clean :
-	rm lex.yy.c y.tab.c calc
+	rm -f lex.yy.c y.tab.c calc
 
 calc :	calc.y calc.l
 	# d'abord yacc pour y.tab.h puis lex puis gcc
